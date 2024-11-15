@@ -1,0 +1,138 @@
+CREATE TABLE DEPARTAMENTO (
+    Nome VARCHAR2(50),
+    Numero INT PRIMARY KEY,
+    RG_Gerente CHAR(8)
+);
+
+CREATE TABLE EMPREGADO (
+    Nome VARCHAR2(50),
+    RG CHAR(8) PRIMARY KEY,
+    CIC CHAR(8),
+    Depto INT,
+    RG_Supervisor CHAR(8),
+    Salario NUMBER(8,2)
+);
+
+CREATE TABLE PROJETO (
+    Nome VARCHAR2(50),
+    Numero INT PRIMARY KEY,
+    Localizacao VARCHAR2(50)
+);
+
+CREATE TABLE DEPENDENTES (
+    RG_Responsavel CHAR(8),
+    Nome_Dependente VARCHAR2(50),
+    Nascimento DATE,
+    Relacao VARCHAR2(20),
+    Sexo CHAR(1),
+    PRIMARY KEY (RG_Responsavel, Nome_Dependente)
+);
+
+CREATE TABLE DEPARTAMENTO_PROJETO (
+    Numero_Depto INT,
+    Numero_Projeto INT,
+    PRIMARY KEY (Numero_Depto, Numero_Projeto)
+);
+
+CREATE TABLE EMPREGADO_PROJETO (
+    RG_Empregado CHAR(8),
+    Numero_Projeto INT,
+    Horas INT,
+    PRIMARY KEY (RG_Empregado, Numero_Projeto)
+);
+
+ALTER TABLE EMPREGADO
+    ADD CONSTRAINT FK_EMPREGADO_DEPARTAMENTO FOREIGN KEY (Depto) REFERENCES DEPARTAMENTO(Numero);
+
+ALTER TABLE EMPREGADO
+    ADD CONSTRAINT FK_EMPREGADO_SUPERVISOR FOREIGN KEY (RG_Supervisor) REFERENCES EMPREGADO(RG);
+
+ALTER TABLE DEPARTAMENTO
+    ADD CONSTRAINT FK_DEPARTAMENTO_GERENTE FOREIGN KEY (RG_Gerente) REFERENCES EMPREGADO(RG);
+
+ALTER TABLE DEPENDENTES
+    ADD CONSTRAINT FK_DEPENDENTES_RESPONSAVEL FOREIGN KEY (RG_Responsavel) REFERENCES EMPREGADO(RG);
+
+ALTER TABLE DEPARTAMENTO_PROJETO
+    ADD CONSTRAINT FK_DEPARTAMENTO_PROJETO_DEPARTAMENTO FOREIGN KEY (Numero_Depto) REFERENCES DEPARTAMENTO(Numero);
+
+ALTER TABLE DEPARTAMENTO_PROJETO
+    ADD CONSTRAINT FK_DEPARTAMENTO_PROJETO_PROJETO FOREIGN KEY (Numero_Projeto) REFERENCES PROJETO(Numero);
+
+ALTER TABLE EMPREGADO_PROJETO
+    ADD CONSTRAINT FK_EMPREGADO_PROJETO_EMPREGADO FOREIGN KEY (RG_Empregado) REFERENCES EMPREGADO(RG);
+
+ALTER TABLE EMPREGADO_PROJETO
+    ADD CONSTRAINT FK_EMPREGADO_PROJETO_PROJETO FOREIGN KEY (Numero_Projeto) REFERENCES PROJETO(Numero);
+
+INSERT INTO EMPREGADO (Nome, RG, CIC, Depto, RG_Supervisor, Salario) VALUES
+('João Luiz', '10101010', '11111111', 1, NULL, 3000.00);
+
+INSERT INTO EMPREGADO (Nome, RG, CIC, Depto, RG_Supervisor, Salario) VALUES
+('Fernando', '20202020', '22222222', 2, '10101010', 2500.00);
+
+INSERT INTO EMPREGADO (Nome, RG, CIC, Depto, RG_Supervisor, Salario) VALUES
+('Ricardo', '30303030', '33333333', 2, '10101010', 2300.00);
+
+INSERT INTO EMPREGADO (Nome, RG, CIC, Depto, RG_Supervisor, Salario) VALUES
+('Jorge', '40404040', '44444444', 2, '20202020', 4200.00);
+
+INSERT INTO EMPREGADO (Nome, RG, CIC, Depto, RG_Supervisor, Salario) VALUES
+('Renato', '50505050', '55555555', 3, '20202020', 1300.00);
+
+INSERT INTO DEPARTAMENTO (Nome, Numero, RG_Gerente) VALUES
+('Contabilidade', 1, '10101010');
+
+INSERT INTO DEPARTAMENTO (Nome, Numero, RG_Gerente) VALUES
+('Engenharia Civil', 2, '30303030');
+
+INSERT INTO DEPARTAMENTO (Nome, Numero, RG_Gerente) VALUES
+('Engenharia Mecânica', 3, '20202020');
+
+INSERT INTO PROJETO (Nome, Numero, Localizacao) VALUES
+('Financeiro 1', 5, 'São Paulo');
+
+INSERT INTO PROJETO (Nome, Numero, Localizacao) VALUES
+('Motor 3', 10, 'Rio Claro');
+
+INSERT INTO PROJETO (Nome, Numero, Localizacao) VALUES
+('Prédio Central', 20, 'Campinas');
+
+INSERT INTO DEPENDENTES (RG_Responsavel, Nome_Dependente, Nascimento, Relacao, Sexo) VALUES
+('10101010', 'Jorge', TO_DATE('1986-12-27', 'YYYY-MM-DD'), 'Filho', 'M');
+
+INSERT INTO DEPENDENTES (RG_Responsavel, Nome_Dependente, Nascimento, Relacao, Sexo) VALUES
+('10101010', 'Luiz', TO_DATE('1979-11-18', 'YYYY-MM-DD'), 'Filho', 'M');
+
+INSERT INTO DEPENDENTES (RG_Responsavel, Nome_Dependente, Nascimento, Relacao, Sexo) VALUES
+('20202020', 'Fernanda', TO_DATE('1969-02-14', 'YYYY-MM-DD'), 'Cônjuge', 'F');
+
+INSERT INTO DEPENDENTES (RG_Responsavel, Nome_Dependente, Nascimento, Relacao, Sexo) VALUES
+('20202020', 'Ângelo', TO_DATE('1995-02-10', 'YYYY-MM-DD'), 'Filho', 'M');
+
+INSERT INTO DEPENDENTES (RG_Responsavel, Nome_Dependente, Nascimento, Relacao, Sexo) VALUES
+('30303030', 'Adreia', TO_DATE('1990-05-01', 'YYYY-MM-DD'), 'Filho', 'F');
+
+INSERT INTO DEPARTAMENTO_PROJETO (Numero_Depto, Numero_Projeto) VALUES
+(2, 5);
+
+INSERT INTO DEPARTAMENTO_PROJETO (Numero_Depto, Numero_Projeto) VALUES
+(3, 10);
+
+INSERT INTO DEPARTAMENTO_PROJETO (Numero_Depto, Numero_Projeto) VALUES
+(2, 20);
+
+INSERT INTO EMPREGADO_PROJETO (RG_Empregado, Numero_Projeto, Horas) VALUES
+('20202020', 5, 10);
+
+INSERT INTO EMPREGADO_PROJETO (RG_Empregado, Numero_Projeto, Horas) VALUES
+('20202020', 10, 25);
+
+INSERT INTO EMPREGADO_PROJETO (RG_Empregado, Numero_Projeto, Horas) VALUES
+('30303030', 5, 35);
+
+INSERT INTO EMPREGADO_PROJETO (RG_Empregado, Numero_Projeto, Horas) VALUES
+('40404040', 20, 50);
+
+INSERT INTO EMPREGADO_PROJETO (RG_Empregado, Numero_Projeto, Horas) VALUES
+('50505050', 20, 35);
